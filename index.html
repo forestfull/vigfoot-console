@@ -69,7 +69,6 @@
 <script>
     let ipAddress = null;
     let isPressedAlt = false;
-    let isPressedEnter = false;
 
     const inputNode = document.getElementById('input');
     const outputNode = document.getElementById('output');
@@ -82,9 +81,6 @@
     }
 
     inputNode.addEventListener('keyup', e => {
-        if (e.key === 'Enter') {
-            isPressedEnter = false;
-        }
         if (e.key === 'Alt') {
             isPressedAlt = false;
         }
@@ -92,10 +88,8 @@
 
     inputNode.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
-            isPressedEnter = true;
             if (isPressedAlt) {
                 inputNode.value += '\n';
-                isPressedEnter = false;
                 return;
             }
             let innerText = inputNode.value;
