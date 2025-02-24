@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        :root {
+            --background-color: black;
+            --font-color: mediumturquoise;
+        }
+
         html {
             margin: 0;
             padding: 0;
@@ -10,18 +15,56 @@
 
         body {
             margin: 0;
-            padding: 1.5rem;
-            background: black;
-            color: mediumturquoise;
+            padding: 0 1rem;
+            background: var(--background-color);
+            color: var(--font-color);
             height: 100vh;
-            overflow: auto;
+            overflow: hidden;
             width: 100%;
             box-sizing: border-box;
+        }
+
+        textarea {
+            background: var(--background-color);
+            color: var(--font-color);
+            resize: none;
+            width: 100%;
+            border: none;
+            outline: none;
+            caret-color: transparent;
+        }
+
+        #output {
+            height: 70vh;
+            overflow: auto;
+        }
+
+        #input {
+            height: 30vh;
+            overflow: hidden;
         }
     </style>
     <title>vigfoot</title>
 </head>
 <body>
-dsf
+<textarea id="output" readonly="readonly"></textarea>
+<textarea id="input"></textarea>
+<script>
+    const inputNode = document.getElementById('input');
+    const outputNode = document.getElementById('output');
+    for (let txt of document.getElementsByTagName('textarea')) {
+        txt.addEventListener('click', e => {
+            e.preventDefault();
+            inputNode.focus();
+        });
+    }
+
+    inputNode.addEventListener('keyup', e => {
+        console.log(e.key);
+        let innerText = inputNode.value;
+        inputNode.value = '';
+        outputNode.value = innerText;
+    });
+</script>
 </body>
 </html>
