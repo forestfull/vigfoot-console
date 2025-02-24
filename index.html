@@ -8,6 +8,18 @@
             --font-color: mediumturquoise;
         }
 
+        @font-face {
+            font-family: 'DungGeunMo';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            font-family: DungGeunMo, monospace;
+            font-size: 1.1rem;
+        }
+
         html {
             margin: 0;
             padding: 0;
@@ -27,6 +39,7 @@
         textarea {
             background: var(--background-color);
             color: var(--font-color);
+            line-height: 1.5rem;
             resize: none;
             width: 100%;
             border: none;
@@ -43,15 +56,22 @@
             height: 30vh;
             overflow: hidden;
         }
+        #input:before {
+            content: ">";
+        }
     </style>
     <title>vigfoot</title>
 </head>
 <body>
-<textarea id="output" readonly="readonly"></textarea>
-<textarea id="input"></textarea>
+<label hidden="hidden" for="output">output</label><textarea id="output" readonly="readonly"></textarea>
+<label hidden="hidden" for="input">input</label><textarea id="input"></textarea>
 <script>
+    let ipAddress = null;
+    let isPressedAlt = false;
+
     const inputNode = document.getElementById('input');
     const outputNode = document.getElementById('output');
+
     for (let txt of document.getElementsByTagName('textarea')) {
         txt.addEventListener('click', e => {
             e.preventDefault();
@@ -60,11 +80,35 @@
     }
 
     inputNode.addEventListener('keyup', e => {
-        console.log(e.key);
-        let innerText = inputNode.value;
-        inputNode.value = '';
-        outputNode.value = innerText;
+        if (e.key === 'Enter') {
+            if (isPressedAlt) {
+                inputNode.value += '\n';
+                return;
+            }
+            let innerText = inputNode.value;
+            inputNode.value = '';
+            outputNode.value += innerText;
+        }
+        if (e.key === 'Alt') {
+            isPressedAlt = false;
+        }
     });
+
+    inputNode.addEventListener('keydown', e => {
+        if (e.key === 'Alt') {
+            isPressedAlt = true;
+        }
+    });
+
+    function getIP(json) {
+        ipAddress = json.ip;
+    }
+
+    window.onload = () => {
+        const titleViewLine = 'Last login: ' + new Date() + ' from ' + ipAddress + '\n';
+        outputNode.value = titleViewLine;
+    };
 </script>
+<script type="application/javascript" src="http://ipinfo.io/?format=jsonp&callback=getIP"></script>
 </body>
 </html>
