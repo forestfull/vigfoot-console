@@ -48,14 +48,15 @@
         }
 
         #output {
-            height: 70vh;
-            overflow: auto;
+            max-height: 90vh;
+            scrollbar-width: none;
         }
 
         #input {
-            height: 30vh;
+            height: 100vh;
             overflow: hidden;
         }
+
         #input:before {
             content: ">";
         }
@@ -68,6 +69,7 @@
 <script>
     let ipAddress = null;
     let isPressedAlt = false;
+    let isPressedEnter = false;
 
     const inputNode = document.getElementById('input');
     const outputNode = document.getElementById('output');
@@ -81,13 +83,7 @@
 
     inputNode.addEventListener('keyup', e => {
         if (e.key === 'Enter') {
-            if (isPressedAlt) {
-                inputNode.value += '\n';
-                return;
-            }
-            let innerText = inputNode.value;
-            inputNode.value = '';
-            outputNode.value += innerText;
+            isPressedEnter = false;
         }
         if (e.key === 'Alt') {
             isPressedAlt = false;
@@ -95,10 +91,27 @@
     });
 
     inputNode.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            isPressedEnter = true;
+            if (isPressedAlt) {
+                inputNode.value += '\n';
+                isPressedEnter = false;
+                return;
+            }
+            let innerText = inputNode.value;
+            inputNode.value = '';
+            outputNode.value += innerText;
+            autoResize();
+        }
         if (e.key === 'Alt') {
             isPressedAlt = true;
         }
     });
+
+    function autoResize() {
+        outputNode.style.height = outputNode.scrollHeight + "px";
+        outputNode.scrollTop = outputNode.scrollHeight;
+    }
 
     function getIP(json) {
         ipAddress = json.ip;
