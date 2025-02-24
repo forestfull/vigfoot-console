@@ -36,35 +36,29 @@
             box-sizing: border-box;
         }
 
-        textarea {
-            background: var(--background-color);
-            color: var(--font-color);
-            line-height: 1.5rem;
-            resize: none;
-            width: 100%;
-            border: none;
-            outline: none;
-            caret-color: transparent;
-        }
-
         #output {
             max-height: 90vh;
+            line-height: 1.5rem;
             scrollbar-width: none;
         }
 
         #input {
+            background: var(--background-color);
+            color: var(--font-color);
+            line-height: 1.5rem;
+            resize: none;
+            border: none;
+            outline: none;
+            width: 100%;
+            caret-color: transparent;
             height: 100vh;
             overflow: hidden;
-        }
-
-        #input:before {
-            content: ">";
         }
     </style>
     <title>vigfoot</title>
 </head>
 <body>
-<label hidden="hidden" for="output">output</label><textarea id="output" rows="1" readonly="readonly"></textarea>
+<div id="output"></div>
 <label hidden="hidden" for="input">input</label><textarea id="input"></textarea>
 <script>
     let ipAddress = null;
@@ -95,13 +89,13 @@
 
         if (e.key === 'Enter') {
             if (isPressedAlt) {
-                inputNode.value += '\n';
+                inputNode.innerText += '\n';
                 return;
             }
             e.preventDefault();
             let innerText = inputNode.value.substring(INPUT_PREFIX.length, inputNode.value.length);
             inputNode.value = INPUT_PREFIX;
-            outputNode.value += '\n' + innerText;
+            outputNode.innerText += '\n' + innerText;
             autoResize();
         }
         if (e.key === 'Alt') {
@@ -122,7 +116,7 @@
     window.onload = () => {
         const titleViewLine = 'Last login: ' + new Date() + ' from ' + ipAddress;
         inputNode.value = INPUT_PREFIX;
-        outputNode.value = titleViewLine;
+        outputNode.innerText = titleViewLine;
     };
 </script>
 <script type="application/javascript" src="http://ipinfo.io/?format=jsonp&callback=getIP"></script>
