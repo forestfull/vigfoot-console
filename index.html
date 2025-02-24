@@ -64,11 +64,12 @@
     <title>vigfoot</title>
 </head>
 <body>
-<label hidden="hidden" for="output">output</label><textarea id="output" readonly="readonly"></textarea>
+<label hidden="hidden" for="output">output</label><textarea id="output" rows="1" readonly="readonly"></textarea>
 <label hidden="hidden" for="input">input</label><textarea id="input"></textarea>
 <script>
     let ipAddress = null;
     let isPressedAlt = false;
+    const INPUT_PREFIX = '> ';
 
     const inputNode = document.getElementById('input');
     const outputNode = document.getElementById('output');
@@ -87,14 +88,20 @@
     });
 
     inputNode.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && inputNode.value.length < INPUT_PREFIX.length + 1) {
+            e.preventDefault();
+            return;
+        }
+
         if (e.key === 'Enter') {
             if (isPressedAlt) {
                 inputNode.value += '\n';
                 return;
             }
-            let innerText = inputNode.value;
-            inputNode.value = '';
-            outputNode.value += innerText;
+            e.preventDefault();
+            let innerText = inputNode.value.substring(INPUT_PREFIX.length, inputNode.value.length);
+            inputNode.value = INPUT_PREFIX;
+            outputNode.value += '\n' + innerText;
             autoResize();
         }
         if (e.key === 'Alt') {
@@ -103,8 +110,9 @@
     });
 
     function autoResize() {
-        outputNode.style.height = outputNode.scrollHeight + "px";
-        outputNode.scrollTop = outputNode.scrollHeight;
+        let scrollHeight = outputNode.scrollHeight;
+        outputNode.style.height = scrollHeight + "px";
+        outputNode.scrollTop = scrollHeight;
     }
 
     function getIP(json) {
@@ -112,7 +120,8 @@
     }
 
     window.onload = () => {
-        const titleViewLine = 'Last login: ' + new Date() + ' from ' + ipAddress + '\n';
+        const titleViewLine = 'Last login: ' + new Date() + ' from ' + ipAddress;
+        inputNode.value = INPUT_PREFIX;
         outputNode.value = titleViewLine;
     };
 </script>
